@@ -1,0 +1,1 @@
+delete from consumers where id='c32d8b45-92fe-44f6-8b61-42c2107dfe87';

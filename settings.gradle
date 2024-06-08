@@ -1,0 +1,5 @@
+rootProject.name = 'payment-service'
+include 'domain'
+include 'application'
+include 'infrastructure'
+

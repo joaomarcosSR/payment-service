@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: payment_gateway_mysql
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=payment_gateway
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3306:3306"
+    networks:
+      - payment_gateway_network
+
+  rabbitmq:
+    container_name: payment_gateway_rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=HKJKHLJLJKH
+      - RABBITMQ_DEFAULT_USER=payment_gateway
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_DEFAULT_HOST=/
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - payment_gateway_network
+
+networks:
+  payment_gateway_network:

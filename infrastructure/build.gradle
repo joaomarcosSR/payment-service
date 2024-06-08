@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.flywaydb:flyway-mysql:9.11.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.flywaydb.flyway' version '9.11.0'
+}
+
+group = 'com.payment.service.infrastructure'
+version = '1.0-SNAPSHOT'
+
+bootJar {
+    archiveFileName = 'application.jar'
+    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springdoc = "2.3.0"
+}
+
+dependencies {
+    implementation(project(":domain"))
+    implementation(project(":application"))
+
+    implementation('com.mysql:mysql-connector-j')
+
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdoc")
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-undertow')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.springframework.boot:spring-boot-starter-amqp')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+
+    implementation('com.fasterxml.jackson.module:jackson-module-afterburner')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+flyway {
+    url = System.getenv('FLYWAY_DB') ?: 'jdbc:mysql://localhost:3306/payment_gateway'
+    user = System.getenv('FLYWAY_USER') ?: 'root'
+    password = System.getenv('FLYWAY_PASS') ?: '123456'
+    cleanDisabled = false
+}
+
+test {
+    useJUnitPlatform()
+}
